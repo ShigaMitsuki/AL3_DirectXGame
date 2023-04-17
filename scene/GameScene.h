@@ -8,6 +8,10 @@
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include "ImGuiManager.h"
+#include "PrimitiveDrawer.h"
+#include "DebugCamera.h"
+#include "AxisIndicator.h"
 
 /// <summary>
 /// ゲームシーン
@@ -47,5 +51,37 @@ private: // メンバ変数
 
 	/// <summary>
 	/// ゲームシーン用
+	 
+	//テクスチャ
+	uint32_t TextureHandle_ = 0;
+
+	// 3Dモデル
+	Model* Model_ = nullptr;
+
+	//サウンドデータ
+	uint32_t SoundDataHandle_ = 0;
+
+	//音声再生ハンドル
+	uint32_t VoiceHundle_ = 0;
+
+	//スプライト
+	Sprite* Sprite_ = nullptr;
+
+	int Mode = 0;
+
+	//インプット
+	Input* Input_ = nullptr;
+
+	// ImGuiの値
+	float InputFloat3[3] = {0.0f, 0.0f, 0.0f};
+
+	//デバッグカメラ
+	DebugCamera* DebugCamera_ = nullptr;
+
+	//ワールドトランスフォーム
+	WorldTransform WorldTransform_;
+	//ビュープロジェクション
+	ViewProjection ViewProjection_;
+
 	/// </summary>
 };

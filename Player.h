@@ -1,7 +1,9 @@
 #pragma once
 #include "Model.h"
 #include "WorldTransform.h"
+#include "Input.h"
 class Player {
+	
 public:
 
 	void Initialize(Model *model,uint32_t TextureHundle);
@@ -19,4 +21,6 @@ private:
 
 	uint32_t TextureHundle_ = 0u;
 
+	
+	/*Input* Input_ = nullptr;*/
 };

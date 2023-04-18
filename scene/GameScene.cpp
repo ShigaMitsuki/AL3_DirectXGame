@@ -4,16 +4,33 @@
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() {}
+GameScene::~GameScene() {
+	delete Model_;
+	delete Player_;
+}
 
 void GameScene::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
+
+	////自キャラ
+	PlayerTexture = TextureManager::Load("AzaleaPink.png");
+	Model_ = Model::Create();
+
+	//WorldTransform_.Initialize();
+	ViewProjection_.Initialize();
+
+	Player_ = new Player();
+
+	Player_->Initialize(Model_, PlayerTexture);
 }
 
-void GameScene::Update() {}
+void GameScene::Update() { 
+	//自キャラ更新
+	Player_->Update();
+}
 
 void GameScene::Draw() {
 
@@ -40,6 +57,8 @@ void GameScene::Draw() {
 
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
+	///自kyら
+	Player_->Draw(ViewProjection_);
 	/// </summary>
 
 	// 3Dオブジェクト描画後処理

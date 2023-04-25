@@ -22,5 +22,5 @@ private:
 	uint32_t TextureHundle_ = 0u;
 
 	
-	/*Input* Input_ = nullptr;*/
+	Input* Input_ = nullptr;
 };

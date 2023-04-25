@@ -8,6 +8,7 @@ GameScene::~GameScene() {
 	delete Model_;
 	delete Player_;
 	delete DebugCamera_;
+	delete Enemy_;
 }
 
 void GameScene::Initialize() {
@@ -31,6 +32,10 @@ void GameScene::Initialize() {
 
 	AxisIndicator::GetInstance()->SetVisible(true);
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&ViewProjection_);
+
+
+	Enemy_ = new Enemy();
+	Enemy_->Initialize(Model_, {0,0,200});
 }
 
 void GameScene::Update() { 
@@ -46,9 +51,13 @@ void GameScene::Update() {
 	} else {
 		ViewProjection_.UpdateMatrix();
 	}
+
+	if (Enemy_ != nullptr) {
+		Enemy_->Update();
+	}
 	//デバッグ時のみ有効
 	#ifdef _DEBUG
-	if (input_->TriggerKey(DIK_SPACE)) {
+	if (input_->TriggerKey(DIK_1)) {
 		if (IsDebugCameraActive_) {
 			IsDebugCameraActive_ = false;
 		} else {
@@ -85,6 +94,9 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	///自kyら
 	Player_->Draw(ViewProjection_);
+	if (Enemy_ != nullptr) {
+		Enemy_->Draw(ViewProjection_);
+	}
 	/// </summary>
 
 	// 3Dオブジェクト描画後処理

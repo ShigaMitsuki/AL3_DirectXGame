@@ -41,3 +41,5 @@ Matrix4x4 MakeRotateYmatrix(float radian);
 Matrix4x4 MakeRotateZmatrix(float radian);
 
 Matrix4x4 MakeAffineMatrix(const Vector3& scale,const Vector3& rot,const Vector3& translate);
+
+Vector3 TransforNormal(const Vector3& v, const Matrix4x4& m);

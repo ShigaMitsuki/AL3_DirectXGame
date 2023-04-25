@@ -7,6 +7,7 @@ GameScene::GameScene() {}
 GameScene::~GameScene() {
 	delete Model_;
 	delete Player_;
+	delete DebugCamera_;
 }
 
 void GameScene::Initialize() {
@@ -25,11 +26,36 @@ void GameScene::Initialize() {
 	Player_ = new Player();
 
 	Player_->Initialize(Model_, PlayerTexture);
+
+	DebugCamera_ = new DebugCamera(1280, 720);
+
+	AxisIndicator::GetInstance()->SetVisible(true);
+	AxisIndicator::GetInstance()->SetTargetViewProjection(&ViewProjection_);
 }
 
 void GameScene::Update() { 
 	//自キャラ更新
 	Player_->Update();
+	if (IsDebugCameraActive_) {
+		DebugCamera_->Update();
+		
+		ViewProjection_.matView = DebugCamera_->GetViewProjection().matView;
+		ViewProjection_.matProjection = DebugCamera_->GetViewProjection().matProjection;
+		
+		ViewProjection_.TransferMatrix();
+	} else {
+		ViewProjection_.UpdateMatrix();
+	}
+	//デバッグ時のみ有効
+	#ifdef _DEBUG
+	if (input_->TriggerKey(DIK_SPACE)) {
+		if (IsDebugCameraActive_) {
+			IsDebugCameraActive_ = false;
+		} else {
+			IsDebugCameraActive_ = true;
+		}
+	}
+	#endif
 }
 
 void GameScene::Draw() {

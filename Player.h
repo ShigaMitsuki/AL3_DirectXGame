@@ -23,4 +23,7 @@ private:
 
 	
 	Input* Input_ = nullptr;
+
+	const float MOVELIMITX = 36;
+	const float MOVELIMITY = 20;
 };

@@ -16,6 +16,8 @@ void (Enemy::*Enemy::spFuncTable[])() = {
     &Enemy::Leave
 };
 
+
+
 void Enemy::Update() {
 
 	/*switch(Phase_) { 

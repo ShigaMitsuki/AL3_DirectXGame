@@ -1,5 +1,16 @@
 #include "Enemy.h"
 
+#include <iostream>
+Enemy::Enemy() {
+	Phase = new EnemyPhaseApproach();
+
+	Velocity_ = {0.0f, 0.0f, 0.0f};
+}
+
+Enemy::~Enemy() { 
+	delete Phase;
+}
+
 void Enemy::Initialize(Model* model, const Vector3& position) {
 	WorldTransform_.Initialize();
 	Model_ = model;
@@ -35,18 +46,19 @@ void Enemy::Update() {
 	// 02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07
 	// 02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07
 
-	(this->*spFuncTable[static_cast<size_t>(Phase_)])();
+	//(this->*spFuncTable[static_cast<size_t>(Phase_)])();
+	Phase->Update(this);
 
 	WorldTransform_.UpdateMatrix();
 
 }
 
 void Enemy::Approach() {
-	Velocity_ ;
+	Velocity_;
 	WorldTransform_.translation_ = Add(WorldTransform_.translation_, {0.0f, 0.0f, -0.5f});
 
 	if (WorldTransform_.translation_.z < 0.0f) {
-		Phase_ = Phase::Leave;
+		//Phase_ = Phase::Leave;
 	}
 
 }
@@ -62,3 +74,29 @@ void Enemy::Draw(ViewProjection viewProjection) {
 	
 }
 
+void Enemy::Move(Vector3 MoveVelocity) {
+	WorldTransform_.translation_ = Add(WorldTransform_.translation_, MoveVelocity);
+}
+
+void Enemy::ChangePhase(BaseEnemyPhase* NextPhase) { 
+	delete Phase;
+	Phase = NextPhase;
+}
+
+void BaseEnemyPhase::Update(Enemy* enemy) { enemy; }
+
+void EnemyPhaseApproach::Update(Enemy* enemy) {
+
+	enemy->Move({0.0f, 0.0f, -0.5f});
+
+	if (enemy->ReturnTranslation().z < 0.0f) {
+		enemy->ChangePhase(new EnemyPhaseLeave);
+	}
+
+}
+void EnemyPhaseLeave::Update(Enemy* enemy) {
+
+	
+	enemy->Move({0.0f, 0.5f, 0.0f});
+
+}

@@ -1,12 +1,12 @@
-#include "PlayerBullet.h"
+#include "EnemyBullet.h"
 #include <cassert>
 
-void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity) { 
-	assert(model); 
+void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity) {
+	assert(model);
 
-	Model_ = model;	
+	Model_ = model;
 
-	TextureHundle_ = TextureManager::Load("CyclamenPink.jpg");
+	TextureHundle_ = TextureManager::Load("Lime.png");
 
 	WorldTransform_.Initialize();
 
@@ -15,7 +15,7 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vecto
 	Velocity_ = velocity;
 }
 
-void PlayerBullet::Update() {
+void EnemyBullet::Update() {
 
 	WorldTransform_.translation_ = Add(WorldTransform_.translation_, Velocity_);
 
@@ -26,9 +26,9 @@ void PlayerBullet::Update() {
 	}
 }
 
-void PlayerBullet::Rotate() {}
+void EnemyBullet::Rotate() {}
 
-void PlayerBullet::Draw(ViewProjection ViewProjection) {
+void EnemyBullet::Draw(ViewProjection ViewProjection) {
 
 	Model_->Draw(WorldTransform_, ViewProjection, TextureHundle_);
 }

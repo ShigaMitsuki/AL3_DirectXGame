@@ -35,7 +35,7 @@ void GameScene::Initialize() {
 
 
 	Enemy_ = new Enemy();
-	Enemy_->Initialize(Model_, {0,0,200});
+	Enemy_->Initialize(Model_, {10,0,200});
 }
 
 void GameScene::Update() { 

@@ -5,10 +5,22 @@ Enemy::Enemy() {
 	Phase = new EnemyPhaseApproach();
 
 	Velocity_ = {0.0f, 0.0f, 0.0f};
+
+	//ShotFunc = std::bind(&Enemy::Shot, this ,std::placeholders::_1, std::placeholders::_2);
 }
 
 Enemy::~Enemy() { 
 	delete Phase;
+
+	for (EnemyBullet* bullet : Bullets_) {
+
+		delete bullet;
+	}
+
+	for (TimeCall* timecall : TimeCall_) {
+
+		delete timecall;
+	}
 }
 
 void Enemy::Initialize(Model* model, const Vector3& position) {
@@ -49,6 +61,24 @@ void Enemy::Update() {
 	//(this->*spFuncTable[static_cast<size_t>(Phase_)])();
 	Phase->Update(this);
 
+	for (EnemyBullet* bullet : Bullets_) {
+
+		bullet->Update();
+	}
+
+	TimeCall_.remove_if([](TimeCall* timecall) {
+		if (timecall->IsFinished()) {
+
+			delete timecall;
+			return true;
+		}
+		return false;
+	});
+		
+	for (TimeCall* timecall : TimeCall_) {
+		timecall->Update();
+	}
+
 	WorldTransform_.UpdateMatrix();
 
 }
@@ -71,6 +101,11 @@ void Enemy::Leave() {
 void Enemy::Draw(ViewProjection viewProjection) {
 
 	Model_->Draw(WorldTransform_, viewProjection, TextureHundle_);
+
+	for (EnemyBullet* bullet : Bullets_) {
+
+		bullet->Draw(viewProjection);
+	}
 	
 }
 
@@ -83,11 +118,39 @@ void Enemy::ChangePhase(BaseEnemyPhase* NextPhase) {
 	Phase = NextPhase;
 }
 
+void Enemy::Shot(Vector3 Pos, Vector3 Vel) {
+
+	Vector3 velocity(Vel);
+	velocity = TransforNormal(velocity, WorldTransform_.matWorld_);
+
+	EnemyBullet* newBullet = new EnemyBullet();
+
+	newBullet->Initialize(Model_, Pos, velocity);
+
+	Bullets_.push_back(newBullet);
+}
+
+void Enemy::TimeShot() {
+	
+	Shot(WorldTransform_.translation_, {0.0f, 0.0f, -1.0f});
+
+	TimeCall_.push_back(new TimeCall(std::bind(&Enemy::TimeShot,this),60));
+
+}
+
 void BaseEnemyPhase::Update(Enemy* enemy) { enemy; }
 
 void EnemyPhaseApproach::Update(Enemy* enemy) {
 
 	enemy->Move({0.0f, 0.0f, -0.5f});
+
+	if (ShotCoolDown_ < 0) {
+		//enemy->Shot(enemy->ReturnTranslation(), {0.0f, 0.0f, -1.0f});
+		enemy->TimeShot();
+		ShotCoolDown_ = SHOTCOOLDOWN;
+	} else {
+		ShotCoolDown_--;
+	}
 
 	if (enemy->ReturnTranslation().z < 0.0f) {
 		enemy->ChangePhase(new EnemyPhaseLeave);

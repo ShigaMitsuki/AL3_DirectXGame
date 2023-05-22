@@ -33,9 +33,12 @@ void GameScene::Initialize() {
 	AxisIndicator::GetInstance()->SetVisible(true);
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&ViewProjection_);
 
-
+	
 	Enemy_ = new Enemy();
+	Enemy_->SetPlayer(Player_);
 	Enemy_->Initialize(Model_, {10,0,200});
+	
+	
 }
 
 void GameScene::Update() { 
@@ -55,6 +58,8 @@ void GameScene::Update() {
 	if (Enemy_ != nullptr) {
 		Enemy_->Update();
 	}
+
+	CheckAllCollisions();
 	//デバッグ時のみ有効
 	#ifdef _DEBUG
 	if (input_->TriggerKey(DIK_1)) {
@@ -115,4 +120,38 @@ void GameScene::Draw() {
 	Sprite::PostDraw();
 
 #pragma endregion
+}
+
+void GameScene::CheckAllCollisions() {
+
+	const std::list<PlayerBullet*>& PlayerBullets = Player_->GetBullets();
+	const std::list<EnemyBullet*>& EnemyBullets = Enemy_->GetBullets();
+
+	for (EnemyBullet* bullet : EnemyBullets) {
+		CheckCollisionPair(bullet, Player_);
+
+	}
+	for (PlayerBullet* bullet : PlayerBullets) {
+		CheckCollisionPair(bullet, Enemy_);
+	}
+
+
+	for (EnemyBullet* ebullet : EnemyBullets) {
+		for (PlayerBullet* pbullet : PlayerBullets) {
+			CheckCollisionPair(pbullet, ebullet);
+		}
+	}
+
+}
+
+void GameScene::CheckCollisionPair(Collider* colliderA, Collider* colliderB) {
+
+	Vector3 posA = colliderA->GetWorldPosition();
+	Vector3 posB = colliderB->GetWorldPosition();
+
+	if (Distance(posA, posB) < 3.0f) {
+		colliderA->OnCollision();
+
+		colliderB->OnCollision();
+	}
 }

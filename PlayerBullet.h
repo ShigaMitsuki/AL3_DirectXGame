@@ -3,7 +3,8 @@
 #include "WorldTransform.h"
 #include "Vector3.h"
 #include "Input.h"
-class PlayerBullet {
+#include "Collider.h"
+class PlayerBullet : public Collider {
 
 	public:
 
@@ -15,7 +16,11 @@ class PlayerBullet {
 
 	void Draw(ViewProjection ViewProjection);
 
+	virtual Vector3 GetWorldPosition();
+
 	bool isDead() const { return isDead_; };
+
+	virtual void OnCollision();
 
 	private:
 	WorldTransform WorldTransform_;

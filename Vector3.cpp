@@ -31,6 +31,7 @@ Vector3 Multiply(float scalar, const Vector3& V) {
 	return AnserV;
 }
 
+
 float Dot(const Vector3& v1, const Vector3& v2) {
 	float Anser = 0.0f;
 
@@ -45,6 +46,12 @@ float Length(const Vector3& v) {
 	return Anser;
 }
 
+float Distance(const Vector3& v1, const Vector3& v2) { 
+	float Anser = 0.0f;
+	Anser = Length(Subtract(v2, v1));
+	return Anser;
+}
+
 Vector3 Normalize(const Vector3& V) {
 	Vector3 AnserV = {0.0f, 0.0f, 0.0f};
 
@@ -53,4 +60,29 @@ Vector3 Normalize(const Vector3& V) {
 	AnserV.z = V.z / sqrtf(V.x * V.x + V.y * V.y + V.z * V.z);
 
 	return AnserV;
+}
+
+Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t) {
+	float dot = Dot(v1, v2);
+
+	
+	dot = Clamp(dot, -1.0f, 1.0f);
+
+	float theta = acosf(dot) * t;
+	Vector3 RelativeVec = Subtract(v2,Multiply(dot, v1));
+	RelativeVec = Normalize(RelativeVec);
+
+	 return Add(Multiply(cosf(theta), v1), Multiply(sinf(theta), RelativeVec));
+}
+
+float Clamp(float num, float Min, float Max) { 
+	
+	if (num > Max) {
+		 return Max; 
+	} else if (num < Min) {
+		 return Min;
+	}
+	
+	return num; 
+
 }

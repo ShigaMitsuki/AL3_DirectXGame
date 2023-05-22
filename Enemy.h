@@ -2,7 +2,7 @@
 #include "Model.h"
 #include "WorldTransform.h"
 #include "Vector3.h"
-
+#include "Collider.h"
 #include "EnemyBullet.h"
 #include "TimeCall.h"
 #include <list>
@@ -10,6 +10,7 @@
 #include <functional>
 class Enemy;
 
+class Player;
 
 class BaseEnemyPhase {
 public:
@@ -31,7 +32,7 @@ public:
 	void Update(Enemy* enemy);
 };
 
-class Enemy {
+class Enemy : public Collider {
 public:
 
 	Enemy();
@@ -52,6 +53,14 @@ public:
 	void TimeShot();
 
 	Vector3 ReturnTranslation() { return WorldTransform_.translation_; };
+
+	void SetPlayer(Player* player) { Player_ = player; };
+
+	virtual Vector3 GetWorldPosition();
+
+	virtual void OnCollision();
+
+	const std::list<EnemyBullet*>& GetBullets() { return Bullets_; };
 
 private:
 
@@ -83,5 +92,8 @@ private:
 
 	//std::function<void(Vector3, Vector3)> ShotFunc;
 
+	Player* Player_ = nullptr;
+
+	
 };
 

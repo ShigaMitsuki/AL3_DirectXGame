@@ -1,5 +1,6 @@
 #include "Enemy.h"
-
+#include "Player.h"
+#include <cassert>
 #include <iostream>
 Enemy::Enemy() {
 	Phase = new EnemyPhaseApproach();
@@ -32,6 +33,8 @@ void Enemy::Initialize(Model* model, const Vector3& position) {
 	TextureHundle_ = TextureManager::Load("Green.jpg");
 
 	Velocity_ = {0.0f , 0.0f , -0.5f};
+
+	TimeShot();
 }
 
 void (Enemy::*Enemy::spFuncTable[])() = {
@@ -43,20 +46,29 @@ void (Enemy::*Enemy::spFuncTable[])() = {
 
 void Enemy::Update() {
 
-	/*switch(Phase_) { 
+	Bullets_.remove_if([](EnemyBullet* bullet) {
+		if (bullet->isDead()) {
+
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
+
+	/*switch(Phase_) {
 	case Phase::Approach:
 	default:
-		Approach();
-		break;
+	    Approach();
+	    break;
 	case Phase::Leave:
-		Leave(); 
-		break;
+	    Leave();
+	    break;
 	}	*/
-	
-	//02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07
+
 	// 02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07
-	// 02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07
-	// 02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07
+	//  02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07
+	//  02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07
+	//  02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07//02_07
 
 	//(this->*spFuncTable[static_cast<size_t>(Phase_)])();
 	Phase->Update(this);
@@ -66,22 +78,22 @@ void Enemy::Update() {
 		bullet->Update();
 	}
 
-	TimeCall_.remove_if([](TimeCall* timecall) {
+	TimeCall_.remove_if([](TimeCall* timecall ) {
 		if (timecall->IsFinished()) {
 
 			delete timecall;
+
 			return true;
 		}
 		return false;
 	});
-		
+
 	for (TimeCall* timecall : TimeCall_) {
 		timecall->Update();
 	}
 
 	WorldTransform_.UpdateMatrix();
-
-}
+};
 
 void Enemy::Approach() {
 	Velocity_;
@@ -120,12 +132,27 @@ void Enemy::ChangePhase(BaseEnemyPhase* NextPhase) {
 
 void Enemy::Shot(Vector3 Pos, Vector3 Vel) {
 
-	Vector3 velocity(Vel);
+	assert(Player_);
+	Vel;
+	const float BULEETSPEED = 1.0f;
+
+	Vector3 PlayerPos = Player_->GetWorldPosition();
+	Vector3 ThisPos = GetWorldPosition();
+	
+	Vector3 PosDistance = Subtract(PlayerPos, ThisPos);
+	Vector3 PosDistanceN = Normalize(PosDistance);
+
+	Vector3 velocity = Multiply(BULEETSPEED, PosDistanceN);
 	velocity = TransforNormal(velocity, WorldTransform_.matWorld_);
 
+	//Vector3 velocity(Vel);
+	//velocity = TransforNormal(velocity, WorldTransform_.matWorld_);
+
 	EnemyBullet* newBullet = new EnemyBullet();
+	
 
 	newBullet->Initialize(Model_, Pos, velocity);
+	newBullet->SetPlayer(Player_);
 
 	Bullets_.push_back(newBullet);
 }
@@ -138,19 +165,34 @@ void Enemy::TimeShot() {
 
 }
 
+Vector3 Enemy::GetWorldPosition() {
+
+	Vector3 WorldPos = {0.0f, 0.0f, 0.0f};
+
+	WorldPos.x = WorldTransform_.matWorld_.m[3][0];
+	WorldPos.y = WorldTransform_.matWorld_.m[3][1];
+	WorldPos.z = WorldTransform_.matWorld_.m[3][2];
+
+	return WorldPos;
+}
+
+void Enemy::OnCollision() {}
+
 void BaseEnemyPhase::Update(Enemy* enemy) { enemy; }
 
 void EnemyPhaseApproach::Update(Enemy* enemy) {
 
 	enemy->Move({0.0f, 0.0f, -0.5f});
 
-	if (ShotCoolDown_ < 0) {
-		//enemy->Shot(enemy->ReturnTranslation(), {0.0f, 0.0f, -1.0f});
-		enemy->TimeShot();
-		ShotCoolDown_ = SHOTCOOLDOWN;
-	} else {
-		ShotCoolDown_--;
-	}
+	//if (ShotCoolDown_ < 0) {
+	//	//enemy->Shot(enemy->ReturnTranslation(), {0.0f, 0.0f, -1.0f});
+	//	
+	//	ShotCoolDown_ = SHOTCOOLDOWN;
+	//} else {
+	//	ShotCoolDown_--;
+	//}
+
+	//enemy->TimeShot();
 
 	if (enemy->ReturnTranslation().z < 0.0f) {
 		enemy->ChangePhase(new EnemyPhaseLeave);

@@ -230,13 +230,13 @@ void DirectXCommon::InitializeDXGIDevice() {
 	// ハードウェアアダプタを優先的に処理
 	std::stable_sort(
 	    adapters.begin(), adapters.end(),
-	    [](const ComPtr<IDXGIAdapter4>& lhs, const ComPtr<IDXGIAdapter4>& rhs) {
-		    DXGI_ADAPTER_DESC3 lhsDesc;
-		    lhs->GetDesc3(&lhsDesc); // アダプターの情報を取得
-		    DXGI_ADAPTER_DESC3 rhsDesc;
-		    rhs->GetDesc3(&rhsDesc); // アダプターの情報を取得
-		    return (lhsDesc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE) <
-		           (rhsDesc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE);
+	    [](const ComPtr<IDXGIAdapter4>& v1, const ComPtr<IDXGIAdapter4>& v2) {
+		    DXGI_ADAPTER_DESC3 v1Desc;
+		    v1->GetDesc3(&v1Desc); // アダプターの情報を取得
+		    DXGI_ADAPTER_DESC3 v2Desc;
+		    v2->GetDesc3(&v2Desc); // アダプターの情報を取得
+		    return (v1Desc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE) <
+		           (v2Desc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE);
 	    });
 
 	result = S_FALSE;

@@ -139,3 +139,19 @@ void Player::Draw(ViewProjection ViewProjection) {
 
 	
 }
+
+Vector3 Player::GetWorldPosition() { 
+	
+	Vector3 WorldPos = {0.0f, 0.0f, 0.0f};
+
+	WorldPos.x = WorldTransform_.matWorld_.m[3][0];
+	WorldPos.y = WorldTransform_.matWorld_.m[3][1];
+	WorldPos.z = WorldTransform_.matWorld_.m[3][2];
+
+	return WorldPos; 
+
+
+
+}
+
+void Player::OnCollision() {}

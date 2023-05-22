@@ -3,8 +3,9 @@
 #include "WorldTransform.h"
 #include "PlayerBullet.h"
 #include "Input.h"
+#include "Collider.h"
 #include <list>
-class Player {
+class Player : public Collider {
 	
 public:
 
@@ -20,6 +21,13 @@ public:
 
 	void Draw(ViewProjection ViewProjection);
 
+	virtual Vector3 GetWorldPosition();
+
+	//void OnCollision();
+
+	const std::list<PlayerBullet*>& GetBullets() { return Bullets_; };
+
+	virtual void OnCollision();
 
 private:
 

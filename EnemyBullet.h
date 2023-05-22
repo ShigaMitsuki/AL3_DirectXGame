@@ -2,9 +2,10 @@
 #include "Input.h"
 #include "Model.h"
 #include "Vector3.h"
+#include "Player.h"
 #include "WorldTransform.h"
-
-class EnemyBullet {
+#include "Collider.h"
+class EnemyBullet : public Collider {
 
 public:
 	void Initialize(Model* model, const Vector3& position, const Vector3& velocity);
@@ -15,7 +16,13 @@ public:
 
 	void Draw(ViewProjection ViewProjection);
 
+	virtual Vector3 GetWorldPosition();
+
 	bool isDead() const { return isDead_; };
+
+	void SetPlayer(Player* player) { Player_ = player; };
+
+	virtual void OnCollision();
 
 private:
 	WorldTransform WorldTransform_;
@@ -30,7 +37,7 @@ private:
 
 	int32_t DeathTimer_ = LIFETIME;
 
-	
+	Player* Player_ = nullptr;
 
 	bool isDead_ = false;
 };

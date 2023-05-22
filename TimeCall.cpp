@@ -1,5 +1,5 @@
 #include "TimeCall.h"
-
+#include "ImGui.h"
 TimeCall::TimeCall(std::function<void(void)> func, uint32_t time) {
 
 
@@ -20,4 +20,8 @@ void TimeCall::Update() {
 
 		Func();
 	}
+
+	ImGui::Begin("Debug1");
+	ImGui::Text("%d", Time_);
+	ImGui::End();
 }

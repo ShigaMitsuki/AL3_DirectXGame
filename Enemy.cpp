@@ -2,6 +2,7 @@
 #include "Player.h"
 #include <cassert>
 #include <iostream>
+#include "CollisionConfig.h"
 Enemy::Enemy() {
 	Phase = new EnemyPhaseApproach();
 
@@ -35,6 +36,10 @@ void Enemy::Initialize(Model* model, const Vector3& position) {
 	Velocity_ = {0.0f , 0.0f , -0.5f};
 
 	TimeShot();
+
+	SetCollisionAttribute(kCollisionAttributeEnemy);
+
+	SetCollisionMask(kCollisionAttributePlayer);
 }
 
 void (Enemy::*Enemy::spFuncTable[])() = {

@@ -4,6 +4,7 @@
 #include "Vector3.h"
 #include "ImGuiManager.h"
 #include <cassert>
+#include "CollisionConfig.h"
 
 Player::~Player() {
 
@@ -23,6 +24,10 @@ void Player::Initialize(Model* model, uint32_t TextureHundle) {
 
 	Input_ = Input::GetInstance();
 
+
+	SetCollisionAttribute(kCollisionAttributePlayer);
+
+	SetCollisionMask(kCollisionAttributePlayer);
 }
 
 void Player::Update() {

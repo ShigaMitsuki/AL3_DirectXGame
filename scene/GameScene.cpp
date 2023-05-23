@@ -127,18 +127,40 @@ void GameScene::CheckAllCollisions() {
 	const std::list<PlayerBullet*>& PlayerBullets = Player_->GetBullets();
 	const std::list<EnemyBullet*>& EnemyBullets = Enemy_->GetBullets();
 
+
+	std::list<Collider*> colliders_;
+
+	colliders_.push_back(Player_);
+	colliders_.push_back(Enemy_);
+
+
+
 	for (EnemyBullet* bullet : EnemyBullets) {
-		CheckCollisionPair(bullet, Player_);
+		colliders_.push_back(bullet);
 
 	}
 	for (PlayerBullet* bullet : PlayerBullets) {
-		CheckCollisionPair(bullet, Enemy_);
+		colliders_.push_back(bullet);
 	}
 
+	std::list<Collider*>::iterator itrA = colliders_.begin();
 
-	for (EnemyBullet* ebullet : EnemyBullets) {
-		for (PlayerBullet* pbullet : PlayerBullets) {
-			CheckCollisionPair(pbullet, ebullet);
+	for (; itrA != colliders_.end(); ++itrA) {
+		//Collider colliderA = colliders_.
+
+		Collider* A = *itrA;
+
+		std::list<Collider*>::iterator itrB = itrA;
+		itrB++;
+
+		for (; itrB != colliders_.end(); ++itrB) {
+			Collider* B = *itrB;
+
+			if (A->GetCollisionAttribute() != B->GetCollisionMask() ||
+			    B->GetCollisionAttribute() != A->GetCollisionMask()) {
+				return;
+			}
+			CheckCollisionPair(A, B);
 		}
 	}
 

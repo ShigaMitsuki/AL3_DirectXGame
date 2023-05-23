@@ -1,6 +1,6 @@
 #include "EnemyBullet.h"
 #include <cassert>
-
+#include "CollisionConfig.h"
 void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity) {
 	assert(model);
 
@@ -24,7 +24,9 @@ void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector
 	WorldTransform_.translation_ = position;
 	WorldTransform_.UpdateMatrix();
 
-	
+	SetCollisionAttribute(kCollisionAttributeEnemy);
+
+	SetCollisionMask(kCollisionAttributeEnemy);
 }
 
 Vector3 EnemyBullet::GetWorldPosition() {

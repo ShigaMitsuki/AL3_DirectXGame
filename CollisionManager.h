@@ -5,6 +5,7 @@
 #include "Enemy.h"
 #include "PlayerBullet.h"
 #include "EnemyBullet.h"
+
 class CollisionManager {
 
 	private:
@@ -20,9 +21,7 @@ class CollisionManager {
 	//~CollisionManager();
 	void Clear();
 
-	void Colpush(Player* player, Enemy* enemy);
-
-	void CheckAllCollisions();
+	void CheckAllCollisions(Player* player, Enemy* enemy);
 
 	void CheckCollisionPair(Collider* colliderA, Collider* colliderB);
 };

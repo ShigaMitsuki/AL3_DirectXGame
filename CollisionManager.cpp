@@ -8,27 +8,26 @@ void CollisionManager::Clear() {
 
 }
 
-void CollisionManager::Colpush(Player* player, Enemy* enemy) {
 
+void CollisionManager::CheckAllCollisions(Player* player, Enemy* enemy) {
+
+	
+	
 	const std::list<PlayerBullet*>& PlayerBullets = player->GetBullets();
 	const std::list<EnemyBullet*>& EnemyBullets = enemy->GetBullets();
 
 	colliders_.push_back(player);
 	colliders_.push_back(enemy);
-	//enemy;
+	// enemy;
 	for (EnemyBullet* bullet : EnemyBullets) {
 		colliders_.push_back(bullet);
 	}
 	for (PlayerBullet* bullet : PlayerBullets) {
 		colliders_.push_back(bullet);
 	}
-}
-
-void CollisionManager::CheckAllCollisions() {
-
+	
 	std::list<Collider*>::iterator itrA = colliders_.begin();
-	
-	
+
 	for (; itrA != colliders_.end(); ++itrA) {
 		// Collider colliderA = colliders_.
 
@@ -38,10 +37,14 @@ void CollisionManager::CheckAllCollisions() {
 		itrB++;
 
 		for (; itrB != colliders_.end(); ++itrB) {
- 			Collider* B = *itrB;
- 
-			if ((A->GetCollisionAttribute() & B->GetCollisionMask()) == 0||
-				(B->GetCollisionAttribute() & A->GetCollisionMask()) == 0) {
+			Collider* B = *itrB;
+
+			if (
+
+			    (A->GetCollisionAttribute() & B->GetCollisionMask()) == 0 ||
+			    (B->GetCollisionAttribute() & A->GetCollisionMask()) == 0
+
+			) {
 				return;
 			}
 			CheckCollisionPair(A, B);

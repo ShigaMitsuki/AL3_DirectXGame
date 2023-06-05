@@ -13,7 +13,7 @@
 #include "Vector3.h"
 #include "AxisIndicator.h"
 #include "Enemy.h"
-
+#include "CollisionManager.h"
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -78,7 +78,7 @@ private: // メンバ変数
 
 	void CheckCollisionPair(Collider* colliderA, Collider* colliderB);
 
-	
+	CollisionManager CollisionManager_;
 
 	/// </summary>
 };

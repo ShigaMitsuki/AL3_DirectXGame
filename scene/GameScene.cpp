@@ -156,8 +156,12 @@ void GameScene::CheckAllCollisions() {
 		for (; itrB != colliders_.end(); ++itrB) {
 			Collider* B = *itrB;
 
-			if (A->GetCollisionAttribute() != B->GetCollisionMask() ||
-			    B->GetCollisionAttribute() != A->GetCollisionMask()) {
+			if (
+
+				(A->GetCollisionAttribute() & B->GetCollisionMask()) == 0 ||
+			    (B->GetCollisionAttribute() & A->GetCollisionMask()) == 0
+				
+				) {
 				return;
 			}
 			CheckCollisionPair(A, B);

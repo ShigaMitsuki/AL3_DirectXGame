@@ -27,7 +27,7 @@ void Player::Initialize(Model* model, uint32_t TextureHundle) {
 
 	SetCollisionAttribute(kCollisionAttributePlayer);
 
-	SetCollisionMask(kCollisionAttributePlayer);
+	SetCollisionMask(~kCollisionAttributePlayer);
 }
 
 void Player::Update() {

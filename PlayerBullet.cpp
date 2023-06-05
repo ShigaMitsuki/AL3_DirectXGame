@@ -17,7 +17,7 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vecto
 
 	SetCollisionAttribute(kCollisionAttributePlayer);
 
-	SetCollisionMask(kCollisionAttributePlayer);
+	SetCollisionMask(~kCollisionAttributePlayer);
 }
 
 void PlayerBullet::Update() {

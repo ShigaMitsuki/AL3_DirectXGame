@@ -26,7 +26,7 @@ void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector
 
 	SetCollisionAttribute(kCollisionAttributeEnemy);
 
-	SetCollisionMask(kCollisionAttributeEnemy);
+	SetCollisionMask(~kCollisionAttributeEnemy);
 }
 
 Vector3 EnemyBullet::GetWorldPosition() {

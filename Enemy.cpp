@@ -39,7 +39,7 @@ void Enemy::Initialize(Model* model, const Vector3& position) {
 
 	SetCollisionAttribute(kCollisionAttributeEnemy);
 
-	SetCollisionMask(kCollisionAttributePlayer);
+	SetCollisionMask(~kCollisionAttributeEnemy);
 }
 
 void (Enemy::*Enemy::spFuncTable[])() = {

@@ -43,3 +43,12 @@ Matrix4x4 MakeRotateZmatrix(float radian);
 Matrix4x4 MakeAffineMatrix(const Vector3& scale,const Vector3& rot,const Vector3& translate);
 
 Vector3 TransforNormal(const Vector3& v, const Matrix4x4& m);
+
+
+Matrix4x4 MakePerspectiveFovMatrix(float FovY, float AspectRatio, float NearClip, float FarClip);
+
+Matrix4x4 MakeOrthoGraphicMatrix(
+    float Left, float Top, float Right, float Bottom, float NearClip, float FarClip);
+
+Matrix4x4 MakeViewportMatrix(
+    float Left, float Top, float Width, float Height, float MinDepth, float MaxDepth);

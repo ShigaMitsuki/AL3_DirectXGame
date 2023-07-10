@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include "Player.h"
+#include "GameScene.h"
 #include <cassert>
 #include <iostream>
 #include "CollisionConfig.h"
@@ -14,10 +15,10 @@ Enemy::Enemy() {
 Enemy::~Enemy() { 
 	delete Phase;
 
-	for (EnemyBullet* bullet : Bullets_) {
+	/*for (EnemyBullet* bullet : Bullets_) {
 
 		delete bullet;
-	}
+	}*/
 
 	for (TimeCall* timecall : TimeCall_) {
 
@@ -28,6 +29,7 @@ Enemy::~Enemy() {
 void Enemy::Initialize(Model* model, const Vector3& position) {
 	WorldTransform_.Initialize();
 	Model_ = model;
+	
 
 	WorldTransform_.translation_ = position;
 
@@ -51,14 +53,7 @@ void (Enemy::*Enemy::spFuncTable[])() = {
 
 void Enemy::Update() {
 
-	Bullets_.remove_if([](EnemyBullet* bullet) {
-		if (bullet->isDead()) {
-
-			delete bullet;
-			return true;
-		}
-		return false;
-	});
+	
 
 	/*switch(Phase_) {
 	case Phase::Approach:
@@ -78,11 +73,7 @@ void Enemy::Update() {
 	//(this->*spFuncTable[static_cast<size_t>(Phase_)])();
 	Phase->Update(this);
 
-	for (EnemyBullet* bullet : Bullets_) {
-
-		bullet->Update();
-	}
-
+	
 	TimeCall_.remove_if([](TimeCall* timecall ) {
 		if (timecall->IsFinished()) {
 
@@ -119,10 +110,7 @@ void Enemy::Draw(ViewProjection viewProjection) {
 
 	Model_->Draw(WorldTransform_, viewProjection, TextureHundle_);
 
-	for (EnemyBullet* bullet : Bullets_) {
-
-		bullet->Draw(viewProjection);
-	}
+	
 	
 }
 
@@ -138,6 +126,7 @@ void Enemy::ChangePhase(BaseEnemyPhase* NextPhase) {
 void Enemy::Shot(Vector3 Pos, Vector3 Vel) {
 
 	assert(Player_);
+	assert(gameScene_);
 	Vel;
 	const float BULEETSPEED = 1.0f;
 
@@ -159,7 +148,7 @@ void Enemy::Shot(Vector3 Pos, Vector3 Vel) {
 	newBullet->Initialize(Model_, Pos, velocity);
 	newBullet->SetPlayer(Player_);
 
-	Bullets_.push_back(newBullet);
+	gameScene_->AddEnemyBullet(newBullet);
 }
 
 void Enemy::TimeShot() {
@@ -181,13 +170,13 @@ Vector3 Enemy::GetWorldPosition() {
 	return WorldPos;
 }
 
-void Enemy::OnCollision() {}
+void Enemy::OnCollision() { /*isDead_ = true; */}
 
 void BaseEnemyPhase::Update(Enemy* enemy) { enemy; }
 
 void EnemyPhaseApproach::Update(Enemy* enemy) {
 
-	enemy->Move({0.0f, 0.0f, -0.5f});
+	enemy->Move({0.0f, 0.0f, -0.0f});
 
 	//if (ShotCoolDown_ < 0) {
 	//	//enemy->Shot(enemy->ReturnTranslation(), {0.0f, 0.0f, -1.0f});

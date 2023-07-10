@@ -1,4 +1,5 @@
 #include "CollisionManager.h"
+#include "GameScene.h"
 #include <cassert>
 CollisionManager::CollisionManager() {}
 
@@ -9,12 +10,12 @@ void CollisionManager::Clear() {
 }
 
 
-void CollisionManager::CheckAllCollisions(Player* player, Enemy* enemy) {
+void CollisionManager::CheckAllCollisions(Player* player, Enemy* enemy, GameScene* gameSccne) {
 
 	
 	
 	const std::list<PlayerBullet*>& PlayerBullets = player->GetBullets();
-	const std::list<EnemyBullet*>& EnemyBullets = enemy->GetBullets();
+	const std::list<EnemyBullet*>& EnemyBullets = gameSccne->GetBullets();
 
 	colliders_.push_back(player);
 	colliders_.push_back(enemy);
@@ -23,7 +24,7 @@ void CollisionManager::CheckAllCollisions(Player* player, Enemy* enemy) {
 		colliders_.push_back(bullet);
 	}
 	for (PlayerBullet* bullet : PlayerBullets) {
-		colliders_.push_back(bullet);
+ 		colliders_.push_back(bullet);
 	}
 	
 	std::list<Collider*>::iterator itrA = colliders_.begin();
@@ -41,11 +42,11 @@ void CollisionManager::CheckAllCollisions(Player* player, Enemy* enemy) {
 
 			if (
 
-			    (A->GetCollisionAttribute() & B->GetCollisionMask()) == 0 ||
-			    (B->GetCollisionAttribute() & A->GetCollisionMask()) == 0
+			    ((A->GetCollisionAttribute() & B->GetCollisionMask()) == 0) ||
+			    ((B->GetCollisionAttribute() & A->GetCollisionMask()) == 0)
 
 			) {
-				return;
+				continue;
 			}
 			CheckCollisionPair(A, B);
 		}
@@ -59,7 +60,7 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 	Vector3 posA = colliderA->GetWorldPosition();
 	Vector3 posB = colliderB->GetWorldPosition();
 
-	if (Distance(posA, posB) < 3.0f) {
+	if (Distance(posA, posB) < 8.0f) {
 		colliderA->OnCollision();
 
 		colliderB->OnCollision();

@@ -5,21 +5,24 @@
 #include "Input.h"
 #include "Collider.h"
 #include <list>
+#include <Sprite.h>
 class Player : public Collider {
 	
 public:
 
 	~Player();
 
-	void Initialize(Model *model,uint32_t TextureHundle);
+	void Initialize(Model* model, uint32_t TextureHundle, Vector3 Pos);
 
-	void Update();
+	void Update(ViewProjection viewProjection);
 
 	void Rotate();
 
 	void Attack();
 
 	void Draw(ViewProjection ViewProjection);
+
+	void DrawUI();
 
 	virtual Vector3 GetWorldPosition();
 
@@ -29,11 +32,16 @@ public:
 
 	virtual void OnCollision();
 
+	void SetParent(const WorldTransform* parent);
+
 private:
 
 	WorldTransform WorldTransform_;
 
+	WorldTransform ReticleWorldTransform_;
+
 	Model* Model_ = nullptr;
+	Sprite* reticleSprite = nullptr;
 
 	uint32_t TextureHundle_ = 0u;
 

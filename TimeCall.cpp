@@ -21,7 +21,5 @@ void TimeCall::Update() {
 		Func();
 	}
 
-	ImGui::Begin("Debug1");
-	ImGui::Text("%d", Time_);
-	ImGui::End();
+	
 }

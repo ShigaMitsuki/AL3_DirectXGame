@@ -1,14 +1,13 @@
 #pragma once
-#include "Model.h"
-#include "WorldTransform.h"
-#include "Vector3.h"
-#include "Input.h"
 #include "Collider.h"
+#include "Input.h"
+#include "Model.h"
+#include "Vector3.h"
+#include "WorldTransform.h"
 class PlayerBullet : public Collider {
 
-	public:
-
-	void Initialize(Model* model, const Vector3& position,const Vector3& velocity);
+public:
+	void Initialize(Model* model, const Vector3& position, const Vector3& velocity);
 
 	void Update();
 
@@ -22,7 +21,7 @@ class PlayerBullet : public Collider {
 
 	virtual void OnCollision();
 
-	private:
+private:
 	WorldTransform WorldTransform_;
 
 	Model* Model_ = nullptr;

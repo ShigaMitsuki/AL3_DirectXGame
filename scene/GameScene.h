@@ -1,19 +1,24 @@
 #pragma once
 
 #include "Audio.h"
+#include "AxisIndicator.h"
+#include "CollisionManager.h"
+#include "DebugCamera.h"
 #include "DirectXCommon.h"
+#include "Enemy.h"
 #include "Input.h"
 #include "Model.h"
+#include "Player.h"
+#include "RailCamera.h"
 #include "SafeDelete.h"
+#include "SkyDome.h"
 #include "Sprite.h"
+#include "Vector3.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include "Player.h"
-#include "DebugCamera.h"
-#include "Vector3.h"
-#include "AxisIndicator.h"
-#include "Enemy.h"
-#include "CollisionManager.h"
+
+#include <sstream>
+
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -50,6 +55,14 @@ public: // メンバ関数
 	/// </summary>
 	void CheckAllCollisions();
 
+	void AddEnemyBullet(EnemyBullet* enemyBullet);
+
+	const std::list<EnemyBullet*>& GetBullets() { return enemyBullets_; };
+
+	void LoadEnemyPopData();
+
+	void UpdateEnemyPopCommands();
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -59,26 +72,39 @@ private: // メンバ変数
 	/// ゲームシーン用
 
 	////////自キャラ
-	//テクスチャハンドル
+	// テクスチャハンドル
 	uint32_t PlayerTexture = 0;
 
-	//3d
+	// 3d
 	Model* Model_ = nullptr;
 
-	//TransForm
-	//WorldTransform WorldTransform_;
+	// TransForm
+	// WorldTransform WorldTransform_;
 	ViewProjection ViewProjection_;
 
 	Player* Player_ = nullptr;
-	Enemy* Enemy_ = nullptr;
+	std::list<Enemy*> Enemy_;
+	SkyDome* SkyDome_ = nullptr;
 
-	bool IsDebugCameraActive_ = true;
+	bool IsDebugCameraActive_ = false;
 
 	DebugCamera* DebugCamera_ = nullptr;
 
 	void CheckCollisionPair(Collider* colliderA, Collider* colliderB);
 
 	CollisionManager CollisionManager_;
+
+	Model* modelSkyDome = nullptr;
+
+	RailCamera* RailCamera_ = nullptr;
+
+	std::list<EnemyBullet*> enemyBullets_;
+
+	std::stringstream enemyPopCommands;
+
+	bool waitFlag = false;
+
+	int waitTimer = 0;
 
 	/// </summary>
 };

@@ -378,3 +378,77 @@ Vector3 TransforNormal(const Vector3& v, const Matrix4x4& m) {
 
 	return AnserV;
 }
+
+Matrix4x4 MakePerspectiveFovMatrix(float FovY, float AspectRatio, float NearClip, float FarClip) {
+	Matrix4x4 AnserM = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+	                    0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+
+	FovY;
+	AspectRatio;
+	NearClip;
+	FarClip;
+
+	AnserM.m[0][0] = 1.0f / tanf(FovY / 2.0f) / AspectRatio;
+
+	AnserM.m[1][1] = 1.0f / tanf(FovY / 2.0f);
+
+	AnserM.m[2][2] = FarClip / (FarClip - NearClip);
+
+	AnserM.m[3][2] = -NearClip * FarClip / (FarClip - NearClip);
+
+	return AnserM;
+}
+
+Matrix4x4 MakeOrthoGraphicMatrix(
+    float Left, float Top, float Right, float Bottom, float NearClip, float FarClip) {
+	Matrix4x4 AnserM = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+	                    0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f};
+
+	Left;
+	Top;
+	Right;
+	Bottom;
+	NearClip;
+	FarClip;
+
+	AnserM.m[0][0] = 2 / (Right - Left);
+
+	AnserM.m[1][1] = 2 / (Top - Bottom);
+
+	AnserM.m[2][2] = 1 / (FarClip - NearClip);
+
+	AnserM.m[3][0] = (Left + Right) / (Left - Right);
+
+	AnserM.m[3][1] = (Top + Bottom) / (Bottom - Top);
+
+	AnserM.m[3][2] = NearClip / (NearClip - FarClip);
+
+	return AnserM;
+}
+
+Matrix4x4 MakeViewportMatrix(
+    float Left, float Top, float Width, float Height, float MinDepth, float MaxDepth) {
+	Matrix4x4 AnserM = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+	                    0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f};
+
+	Left;
+	Top;
+	Width;
+	Height;
+	MinDepth;
+	MaxDepth;
+
+	AnserM.m[0][0] = Width / 2;
+
+	AnserM.m[1][1] = -(Height / 2);
+
+	AnserM.m[2][2] = MaxDepth - MinDepth;
+
+	AnserM.m[3][0] = Left + (Width / 2);
+
+	AnserM.m[3][1] = Top + (Height / 2);
+
+	AnserM.m[3][2] = MinDepth;
+
+	return AnserM;
+}

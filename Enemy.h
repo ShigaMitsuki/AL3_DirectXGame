@@ -11,6 +11,7 @@
 class Enemy;
 
 class Player;
+class GameScene;
 
 class BaseEnemyPhase {
 public:
@@ -56,11 +57,15 @@ public:
 
 	void SetPlayer(Player* player) { Player_ = player; };
 
+	bool isDead() const { return isDead_; };
+
 	virtual Vector3 GetWorldPosition();
 
 	virtual void OnCollision();
 
-	const std::list<EnemyBullet*>& GetBullets() { return Bullets_; };
+	//const std::list<EnemyBullet*>& GetBullets() { return Bullets_; };
+
+	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; };
 
 private:
 
@@ -87,13 +92,14 @@ private:
 
 	BaseEnemyPhase* Phase;
 
-	std::list<EnemyBullet*> Bullets_;
+	//std::list<EnemyBullet*> Bullets_;
 	std::list<TimeCall*> TimeCall_;
 
 	//std::function<void(Vector3, Vector3)> ShotFunc;
 
+	bool isDead_ = false;
 	Player* Player_ = nullptr;
-
+	GameScene* gameScene_ = nullptr;
 	
 };
 

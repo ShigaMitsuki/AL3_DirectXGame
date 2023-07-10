@@ -6,8 +6,10 @@
 #include "PlayerBullet.h"
 #include "EnemyBullet.h"
 
-class CollisionManager {
+//class CollisionManager;
+//class GameScene;
 
+class CollisionManager {
 	private:
 	
 
@@ -21,7 +23,7 @@ class CollisionManager {
 	//~CollisionManager();
 	void Clear();
 
-	void CheckAllCollisions(Player* player, Enemy* enemy);
+	void CheckAllCollisions(Player* player, Enemy* enemy, GameScene* gameSccne);
 
 	void CheckCollisionPair(Collider* colliderA, Collider* colliderB);
 };

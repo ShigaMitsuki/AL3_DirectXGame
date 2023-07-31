@@ -86,6 +86,18 @@ private: // メンバ変数
 	std::list<Enemy*> Enemy_;
 	SkyDome* SkyDome_ = nullptr;
 
+	Sprite* Black = nullptr;
+
+	Sprite* GameOver = nullptr;
+	Sprite* GameClear = nullptr;
+
+	Sprite* Tutorial = nullptr;
+		
+	float blackSize = 0.0f; 
+
+	bool GameOverFlag = false;
+	bool GameClearFlag = false;
+
 	bool IsDebugCameraActive_ = false;
 
 	DebugCamera* DebugCamera_ = nullptr;
@@ -96,6 +108,12 @@ private: // メンバ変数
 
 	Model* modelSkyDome = nullptr;
 
+	Model* mahoModel = nullptr;
+
+	Model* enemyModel = nullptr;
+
+	Model* mahouJinModel = nullptr;
+
 	RailCamera* RailCamera_ = nullptr;
 
 	std::list<EnemyBullet*> enemyBullets_;
@@ -104,7 +122,17 @@ private: // メンバ変数
 
 	bool waitFlag = false;
 
+	float resetTime = 0;
+
 	int waitTimer = 0;
+
+	int owarimade = 0;
+
+	int owari = 7500;
+
+	bool StatFlag = false;
+
+	void Reset();
 
 	/// </summary>
 };

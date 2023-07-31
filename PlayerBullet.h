@@ -4,6 +4,10 @@
 #include "Model.h"
 #include "Vector3.h"
 #include "WorldTransform.h"
+class PlayerBullet;
+class Player;
+
+
 class PlayerBullet : public Collider {
 
 public:
@@ -19,7 +23,15 @@ public:
 
 	bool isDead() const { return isDead_; };
 
+	void SetPlayer(Player* player) { Player_ = player; };
+
+	bool GetShotFlag() { return shotFlag; };
+
 	virtual void OnCollision();
+
+	float GetScale() { return WorldTransform_.scale_.x; };
+
+	void SetMahouJinScale(float mahouJinScale) { MahouJinScale = mahouJinScale; };
 
 private:
 	WorldTransform WorldTransform_;
@@ -32,9 +44,15 @@ private:
 
 	Vector3 Velocity_;
 
+	bool shotFlag = false;
+
 	static const int32_t LIFETIME = 60 * 5;
 
 	int32_t DeathTimer_ = LIFETIME;
 
 	bool isDead_ = false;
+
+	float MahouJinScale = 1.0f;
+
+	Player* Player_ = nullptr;
 };

@@ -22,10 +22,16 @@ class EnemyPhaseApproach : public BaseEnemyPhase {
 public:
 	void Update(Enemy* enemy);
 
+
 private:
 	static const int32_t SHOTCOOLDOWN = 60;
 
 	int32_t ShotCoolDown_ = SHOTCOOLDOWN;
+
+	
+	int sinAngle = 90;
+
+	int CoolDown = 0;
 };
 
 class EnemyPhaseLeave : public BaseEnemyPhase {
@@ -39,7 +45,7 @@ public:
 	Enemy();
 	~Enemy();
 
-	void Initialize(Model* model, const Vector3& position);
+	void Initialize(Model* model, const Vector3& position,int enemytype);
 
 	void Update();
 
@@ -57,6 +63,10 @@ public:
 
 	void SetPlayer(Player* player) { Player_ = player; };
 
+	int GetEneyType() { return enemyType; };
+
+	void Damaged();
+
 	bool isDead() const { return isDead_; };
 
 	virtual Vector3 GetWorldPosition();
@@ -67,7 +77,11 @@ public:
 
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; };
 
+	float GetScale() { return WorldTransform_.scale_.x; };
+
 private:
+
+	int enemyType;
 
 	WorldTransform WorldTransform_;
 
@@ -90,16 +104,20 @@ private:
 
 	static void(Enemy::*spFuncTable[])();
 
-	BaseEnemyPhase* Phase;
+	BaseEnemyPhase* Phase;                                                    
 
 	//std::list<EnemyBullet*> Bullets_;
 	std::list<TimeCall*> TimeCall_;
 
 	//std::function<void(Vector3, Vector3)> ShotFunc;
 
+	int DontViewTime = 0;
+
+	int HP = 3;
+
 	bool isDead_ = false;
 	Player* Player_ = nullptr;
 	GameScene* gameScene_ = nullptr;
-	
+
 };
 

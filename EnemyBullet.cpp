@@ -8,9 +8,9 @@ void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector
 
 	TextureHundle_ = TextureManager::Load("Lime.png");
 
-	WorldTransform_.scale_.x = 0.5f;
-	WorldTransform_.scale_.y = 0.5f;
-	WorldTransform_.scale_.z = 3.0f;
+	WorldTransform_.scale_.x = 0.25f;
+	WorldTransform_.scale_.y = 0.25f;
+	WorldTransform_.scale_.z = 0.25f;
 
 	WorldTransform_.Initialize();
 
@@ -46,7 +46,7 @@ void EnemyBullet::OnCollision() {
 
 void EnemyBullet::Update() {
 
-	Vector3 PlayerPos = Player_->GetWorldPosition();
+	/*Vector3 PlayerPos = Player_->GetWorldPosition();
 	Vector3 ThisPos = GetWorldPosition();
 
 	Vector3 ToPlayer = Subtract(PlayerPos, ThisPos);
@@ -61,7 +61,11 @@ void EnemyBullet::Update() {
 	WorldTransform_.rotation_.y = std::atan2f(Velocity_.x, Velocity_.z);
 	float XZ = sqrtf(Velocity_.x * Velocity_.x + Velocity_.z * Velocity_.z);
 
-	WorldTransform_.rotation_.x = std::atan2f(-Velocity_.y, XZ);
+	WorldTransform_.rotation_.x = std::atan2f(-Velocity_.y, XZ);*/
+
+	//Velocity_ = {0.0f,0.0f,-1.0f};
+
+	WorldTransform_.translation_ = Add(WorldTransform_.translation_, Velocity_);
 
 	WorldTransform_.UpdateMatrix();
 

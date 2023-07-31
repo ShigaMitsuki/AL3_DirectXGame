@@ -1,5 +1,7 @@
 #include "Enemy.h"
 #include "Player.h"
+#define _USE_MATH_DEFINES
+#include <math.h>
 #include "GameScene.h"
 #include <cassert>
 #include <iostream>
@@ -26,22 +28,35 @@ Enemy::~Enemy() {
 	}
 }
 
-void Enemy::Initialize(Model* model, const Vector3& position) {
+void Enemy::Initialize(Model* model, const Vector3& position, int enemytype) {
 	WorldTransform_.Initialize();
 	Model_ = model;
 	
+	enemyType = enemytype;
 
 	WorldTransform_.translation_ = position;
 
 	TextureHundle_ = TextureManager::Load("Green.jpg");
 
-	Velocity_ = {0.0f , 0.0f , -0.5f};
+	Velocity_ = {0.0f , 0.0f , -10.0f};
 
-	TimeShot();
+	//TimeShot();
 
 	SetCollisionAttribute(kCollisionAttributeEnemy);
 
 	SetCollisionMask(~kCollisionAttributeEnemy);
+
+	switch (enemyType) {
+	default:
+	case 0:
+		break;
+	case 1:
+
+		WorldTransform_.scale_ = {3.0f, 3.0f, 3.0f};
+
+		break;
+	}
+
 }
 
 void (Enemy::*Enemy::spFuncTable[])() = {
@@ -53,7 +68,9 @@ void (Enemy::*Enemy::spFuncTable[])() = {
 
 void Enemy::Update() {
 
-	
+	if (HP <= 0 || WorldTransform_.translation_.z < 60) {
+		isDead_ = true;
+	}
 
 	/*switch(Phase_) {
 	case Phase::Approach:
@@ -74,6 +91,7 @@ void Enemy::Update() {
 	Phase->Update(this);
 
 	
+	
 	TimeCall_.remove_if([](TimeCall* timecall ) {
 		if (timecall->IsFinished()) {
 
@@ -93,7 +111,11 @@ void Enemy::Update() {
 
 void Enemy::Approach() {
 	Velocity_;
-	WorldTransform_.translation_ = Add(WorldTransform_.translation_, {0.0f, 0.0f, -0.5f});
+
+	
+	
+
+	//WorldTransform_.translation_ = Add(WorldTransform_.translation_, {0.0f + sinf(radian) * 2.0f, 0.0f, -2.0f});
 
 	if (WorldTransform_.translation_.z < 0.0f) {
 		//Phase_ = Phase::Leave;
@@ -108,9 +130,13 @@ void Enemy::Leave() {
 
 void Enemy::Draw(ViewProjection viewProjection) {
 
-	Model_->Draw(WorldTransform_, viewProjection, TextureHundle_);
+	if (DontViewTime <= 0) {
 
-	
+		Model_->Draw(WorldTransform_, viewProjection, TextureHundle_);
+		
+	} else {
+		DontViewTime--;
+	}
 	
 }
 
@@ -159,6 +185,15 @@ void Enemy::TimeShot() {
 
 }
 
+void Enemy::Damaged() {
+	
+	if (DontViewTime == 0) {
+
+		DontViewTime = 3;
+		HP--;
+	}
+}
+
 Vector3 Enemy::GetWorldPosition() {
 
 	Vector3 WorldPos = {0.0f, 0.0f, 0.0f};
@@ -170,28 +205,52 @@ Vector3 Enemy::GetWorldPosition() {
 	return WorldPos;
 }
 
-void Enemy::OnCollision() { /*isDead_ = true; */}
+void Enemy::OnCollision() { Damaged(); }
 
 void BaseEnemyPhase::Update(Enemy* enemy) { enemy; }
 
 void EnemyPhaseApproach::Update(Enemy* enemy) {
 
-	enemy->Move({0.0f, 0.0f, -0.0f});
+	float radian = (float)sinAngle * (float)(M_PI / 180.0f);
+		switch (enemy->GetEneyType()) {
+	default:
+	case 0:
 
-	//if (ShotCoolDown_ < 0) {
-	//	//enemy->Shot(enemy->ReturnTranslation(), {0.0f, 0.0f, -1.0f});
-	//	
-	//	ShotCoolDown_ = SHOTCOOLDOWN;
-	//} else {
-	//	ShotCoolDown_--;
-	//}
+		sinAngle += 2;
 
-	//enemy->TimeShot();
+		if (sinAngle >= 360) {
+			sinAngle -= 360;
+		}
 
-	if (enemy->ReturnTranslation().z < 0.0f) {
-		enemy->ChangePhase(new EnemyPhaseLeave);
+		enemy->Move({0.0f + sinf(radian) * 0.2f, 0.0f, -0.15f});
+
+		// if (ShotCoolDown_ < 0) {
+		//	//enemy->Shot(enemy->ReturnTranslation(), {0.0f, 0.0f, -3.0f});
+		//
+		//	ShotCoolDown_ = SHOTCOOLDOWN;
+		// } else {
+		//	ShotCoolDown_--;
+		// }
+
+		// enemy->TimeShot();
+
+		if (enemy->ReturnTranslation().z < 0.0f) {
+			enemy->ChangePhase(new EnemyPhaseLeave);
+		}
+		break;
+	case 1:
+
+		enemy->Move({0.0f, 0.0f, -0.3f});
+
+		if (CoolDown > 300) {
+			enemy->Shot(enemy->ReturnTranslation(), {0.0f, 0.0f, -1.0f});
+			CoolDown = 0;
+		}
+
+		CoolDown++;
+
+		break;
 	}
-
 }
 void EnemyPhaseLeave::Update(Enemy* enemy) {
 
